@@ -28,10 +28,10 @@ async def cmd_start(message: types.Message):
 # /rnd 1-30 
 @dp.message(Command(commands=['random','rand','rnd']))
 async def get_random(message: types.Message, command:CommandObject):
-    a,b=[int(n)for n in command.args.split('-')]
+    a,b=[int(n) for n in command.args.split('-')]
     
     rnum= randint (a,b)
-    await message.reply(f'Случайное число:\t{rnum}')
+    await message.reply(f'Случайное число от{a} до {b} Ответ :\t{rnum}')
 
 
 @dp.message(Command('image'))
@@ -42,6 +42,17 @@ async def upload_photo(message: types.Message):
 @dp.message(Command('MyGroup'))
 async def cmd_to_group(message:types.Message, bot:Bot):
     await bot.send_message(GROUP_ID,'HELLO from Farzin')
+    
+# команды забанить пользователя
+@dp.message(Command('ban'))
+async def komanda_zabanit(message:types.Message):
+ #   если команда без цитаты
+    if not message.reply_to_message:
+        await message.reply('Пиши команду Ban в ответ на сообщение')
+        return 
+    await message.bot.delete_message(chat_id=GROUP_ID,message_id=message.message_id)
+    await message.bot.ban_chat_member(chat_id=GROUP_ID,user_id=message.reply_to_message.from_user.id)
+    
 # ping pong 
 @dp.message()
 async def echo(message: types.Message):
@@ -59,4 +70,3 @@ async def main():
 # основной цикл
 if __name__ == '__main__':
     asyncio.run(main())
-
